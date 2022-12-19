@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">PP_3_1_3</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/">Стартовая страница</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<br>
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
+            <h1 class="text-center">Создать нового пользователя</h1>
+            <div class="card-body">
+                <form th:action="@{/register}" th:object="${user}" method="post">
+                    <input type="hidden" name="_csrf" value="{{.csrf_token}}">
+                    <div class="form-group">
+                        <label>Имя</label>
+                        <input type="text" name="username" th:field="*{username}" class="form-control"
+                               placeholder="Enter user name"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Пароль</label>
+                        <input type="text" name="password" th:field="*{password}" class="form-control"
+                               placeholder="Enter last name"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Возраст</label>
+                        <input type="number" name="age" th:field="*{age}" class="form-control"
+                               placeholder="Enter user age"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Почта</label>
+                        <input type="text" name="eMail" th:field="*{eMail}" class="form-control"
+                               placeholder="Enter user eMail"/>
+                    </div>
+
+                    <div class="box-footer">
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

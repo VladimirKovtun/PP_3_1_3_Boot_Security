@@ -22,7 +22,7 @@ public class User implements UserDetails {
     @NotEmpty(message = "Это поле не может быть пустым")
     @Size(min = 2, max = 100, message = "Имя должно быть от 2 до 100 символов длиной")
     @Column(name = "username")
-    private String userName;
+    private String username;
 
 //    @NotEmpty(message = "Это поле не может быть пустым")
     @Column(name = "password")
@@ -53,17 +53,13 @@ public class User implements UserDetails {
     }
 
     public User(String userName, int age, String eMail) {
-        this.userName = userName;
+        this.username = userName;
         this.age = age;
         this.eMail = eMail;
     }
 
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     @Override
@@ -73,12 +69,12 @@ public class User implements UserDetails {
 
     @Override
     public String getPassword() {
-        return getPassword();
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return getUserName();
+        return username;
     }
 
     @Override

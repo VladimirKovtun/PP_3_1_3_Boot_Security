@@ -23,8 +23,9 @@
         </div>
     </div>
 </nav>
-<br><br>
-<h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]], welcome spring boot security page!</h1>
+<br>
+<br>
+<h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]], that ADMIN page!</h1>
 <div>
     <form th:action="@{/logout}" method="post">
         <input type="submit" value="Sign out">
