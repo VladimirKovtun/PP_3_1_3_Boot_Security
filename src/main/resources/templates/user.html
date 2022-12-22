@@ -44,29 +44,30 @@
 <br>
 <div class="container">
     <div class="row mb-3">
-        <label for="colFormLabelSm" class="col-sm-2 col-form-label"><strong>Имя пользователя</strong></label>
-        <div class="col-sm-10">
+        <label for="colFormLabelSm" class="col-3 col-form-label"><strong>Имя пользователя</strong></label>
+        <div class="col-5">
             <input type="text" class="form-control form-control-sm" th:value="${user.getUsername()}"
-                   id="colFormLabelSm">
+                   id="colFormLabelSm" disabled>
         </div>
     </div>
     <div class="row mb-3">
-        <label for="colFormLabel" class="col-sm-2 col-form-label"><strong>Возраст</strong></label>
-        <div class="col-sm-10">
-            <input type="text" class="form-control" th:value="${user.getAge()}" id="colFormLabel">
+        <label for="colFormLabel" class="col-3 col-form-label"><strong>Возраст</strong></label>
+        <div class="col-5">
+            <input type="text" class="form-control" th:value="${user.getAge()}" id="colFormLabel" disabled>
         </div>
     </div>
     <div class="row mb-3">
-        <label for="colFormLabelLg" class="col-sm-2 col-form-label"><strong>Эл. адрес</strong></label>
-        <div class="col-sm-10">
-            <input type="email" class="form-control form-control-lg" th:value="${user.geteMail()}" id="colFormLabelLg">
+        <label for="colFormLabelLg" class="col-3 col-form-label"><strong>Эл. адрес</strong></label>
+        <div class="col-5">
+            <input type="email" class="form-control form-control-lg" th:value="${user.geteMail()}"
+                   id="colFormLabelLg" disabled>
         </div>
     </div>
     <div class="row">
-        <label for="colFormLabelBg" class="col-sm-2 col-form-label"><strong>Право доступа</strong></label>
-        <div class="col-sm-10">
+        <label for="colFormLabelBg" class="col-3 col-form-label"><strong>Право доступа</strong></label>
+        <div class="col-5">
             <input type="text" class="form-control form-control-lg" th:value="${user.getRolesString()}"
-                   id="colFormLabelBg">
+                   id="colFormLabelBg" disabled>
         </div>
     </div>
 </div>

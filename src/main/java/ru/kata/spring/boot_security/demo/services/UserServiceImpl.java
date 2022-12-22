@@ -31,9 +31,6 @@ public class UserServiceImpl implements UserService {
         if (user.getRoles() == null || user.getRoles().isEmpty()) {
             user.setRoles(Set.of(roleRepositories.getByName("ROLE_USER")));
         }
-//        Set<Role> newRoles = user.getRoles() == null ? Set.of(roleRepositories.getByName("ROLE_USER")) : user.getRoles();
-//        user.setRoles(newRoles);
-//        newRoles.forEach(user::addRole);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
@@ -43,7 +40,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll();
     }
 
-    @Transactional(readOnly = true)
     @Override
     public User getUser(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User with id : " + id + " not found"));

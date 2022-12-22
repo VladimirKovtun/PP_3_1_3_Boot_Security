@@ -76,6 +76,7 @@
                                 <label th:for="${#ids.prev('roles')}" th:text="${role_.getName()}">Role</label>
                             </li>
                         </ul>
+                        <p style="color: red" th:if="${#fields.hasErrors('roles')}" th:errors="*{roles}">Name error</p>
                     </div>
                     <br>
                     <div class="form-group">

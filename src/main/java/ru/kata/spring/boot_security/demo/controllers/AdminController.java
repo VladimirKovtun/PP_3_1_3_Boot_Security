@@ -10,7 +10,6 @@ import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 import ru.kata.spring.boot_security.demo.services.UserService;
 
 import javax.validation.Valid;
-import java.security.Principal;
 
 @Controller
 @RequestMapping()
@@ -38,14 +37,18 @@ public class AdminController {
 
     @GetMapping("/admin/edit/{id}")
     public String editUser(@PathVariable Long id, Model model) {
-        model.addAttribute("user", UserDto.toDtoUpd(userService.getUser(id)));
+        model.addAttribute("user", UserDto.toDto(userService.getUser(id)));
         model.addAttribute("allRoles", roleRepository.findAll());
         return "edit_user";
     }
 
     @PatchMapping("/admin/{id}")
-    public String updateUser(@ModelAttribute("user") @Valid UserDto user, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
+    public String updateUser(@ModelAttribute("user") @Valid UserDto user, BindingResult bindingResult, Model model) {
+        if (user.getRoles().isEmpty() || bindingResult.hasErrors()) {
+            model.addAttribute("allRoles", roleRepository.findAll());
+            if (user.getRoles().isEmpty()) {
+                bindingResult.rejectValue("roles", "error.roles", "Поле не может быть пустым!");
+            }
             return "edit_user";
         }
         userService.editUser(UserDto.toUser(user));

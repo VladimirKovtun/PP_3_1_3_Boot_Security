@@ -33,18 +33,6 @@ public class UserDto {
         return userDto;
     }
 
-    public static UserDto toDtoUpd(User user) {
-        UserDto userDto = new UserDto();
-        userDto.setId(user.getId());
-        userDto.setUsername(user.getUsername());
-        userDto.setPassword("123");
-        userDto.setConfirm("123");
-        userDto.setAge(user.getAge());
-        userDto.seteMail(user.geteMail());
-        userDto.setRoles(user.getRoles());
-        return userDto;
-    }
-
     public static User toUser(UserDto userDto) {
         User user = new User();
         user.setId(userDto.getId());

@@ -33,7 +33,7 @@ public class RegisterController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute("user") @Valid UserDto user, BindingResult bindingResult, Model model) {
+    public String registerUser(@ModelAttribute("user") @Valid UserDto user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "register";
         } else if (userService.findByName(user.getUsername()).isPresent()) {

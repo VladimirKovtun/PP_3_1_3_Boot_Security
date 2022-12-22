@@ -28,10 +28,10 @@ public class User implements UserDetails {
     @Column(name = "email")
     private String eMail;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "roles_id"))
-    private Set<Role> roles;
+    @ManyToMany
+    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "roles_id", referencedColumnName = "id"))
+    private Set<Role> roles = new java.util.LinkedHashSet<>();
 
     public User(String username, String password, int age, String email, Set<Role> roles) {
         this.username = username;
