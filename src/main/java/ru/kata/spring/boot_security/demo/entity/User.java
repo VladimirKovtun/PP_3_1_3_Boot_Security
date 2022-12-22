@@ -4,12 +4,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -17,29 +14,32 @@ public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @NotEmpty(message = "Это поле не может быть пустым")
-    @Size(min = 2, max = 100, message = "Имя должно быть от 2 до 100 символов длиной")
-    @Column(name = "username")
+    @Column(name = "username", unique = true)
     private String username;
 
-//    @NotEmpty(message = "Это поле не может быть пустым")
     @Column(name = "password")
     private String password;
-    @Min(value = 8, message = "Возраст должен быть больше 8")
+
     @Column(name = "age")
     private int age;
 
-    @NotEmpty(message = "Это поле не может быть пустым")
-    @Email(message = "Введите почту в соотвествии со стандартом")
     @Column(name = "email")
     private String eMail;
 
-    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
-    @Enumerated(EnumType.STRING)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "roles_id"))
     private Set<Role> roles;
+
+    public User(String username, String password, int age, String email, Set<Role> roles) {
+        this.username = username;
+        this.password = password;
+        this.age = age;
+        this.eMail = email;
+        this.roles = roles;
+    }
 
     public Set<Role> getRoles() {
         return roles;
@@ -52,10 +52,19 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String userName, int age, String eMail) {
-        this.username = userName;
+    public User(Long id, String username, int age, String eMail, Set<Role> roles) {
+        this.id = id;
+        this.username = username;
         this.age = age;
         this.eMail = eMail;
+        this.roles = roles;
+    }
+
+    public void toUser(User userUpdate) {
+        this.setUsername((userUpdate.getUsername()));
+        this.setAge((userUpdate.getAge()));
+        this.seteMail((userUpdate.geteMail()));
+        this.setRoles((userUpdate.getRoles()));
     }
 
     public void setUsername(String username) {
@@ -101,11 +110,11 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -125,4 +134,33 @@ public class User implements UserDetails {
         this.eMail = eMail;
     }
 
+    public String getRolesString() {
+        return roles.stream().map(Role::getName).collect(Collectors.joining(", "));
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", age=" + age +
+                ", eMail='" + eMail + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        return username.equals(user.username);
+    }
+
+    @Override
+    public int hashCode() {
+        return username.hashCode();
+    }
 }

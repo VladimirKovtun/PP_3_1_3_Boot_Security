@@ -1,36 +1,70 @@
 package ru.kata.spring.boot_security.demo.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.entity.Role;
 import ru.kata.spring.boot_security.demo.entity.User;
+import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
-import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private final UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private RoleRepository roleRepositories;
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Failed to retrieve user: " + username));
-    }
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
 
     @Transactional
     @Override
     public void addUser(User user) {
-        user.setRoles(Collections.singleton(Role.ADMIN));
+        if (user.getRoles() == null || user.getRoles().isEmpty()) {
+            user.setRoles(Set.of(roleRepositories.getByName("ROLE_USER")));
+        }
+//        Set<Role> newRoles = user.getRoles() == null ? Set.of(roleRepositories.getByName("ROLE_USER")) : user.getRoles();
+//        user.setRoles(newRoles);
+//        newRoles.forEach(user::addRole);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
+    }
+
+    @Override
+    public List<User> showAllUsers() {
+        return userRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public User getUser(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User with id : " + id + " not found"));
+    }
+
+    @Transactional
+    @Override
+    public void editUser(User user) {
+        User byId = userRepository.findById(user.getId()).orElseThrow();
+        byId.toUser(user);
+        userRepository.save(byId);
+    }
+
+    @Transactional
+    @Override
+    public void removeUser(Long id) {
+        userRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<User> findByName(String name) {
+        return userRepository.findByUsername(name);
     }
 }

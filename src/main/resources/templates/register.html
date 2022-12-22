@@ -1,16 +1,18 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ru">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml"
+      lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Spring Security Example</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
 </head>
 <body>
 <nav class="navbar navbar-expand-lg bg-light">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">PP_3_1_3</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <a class="navbar-brand" href="#">PP_3_1_3_Boot-Security</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
@@ -18,7 +20,19 @@
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="/">Стартовая страница</a>
                 </li>
+                <li sec:authorize="hasAuthority('ROLE_ADMIN')" class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/admin">Страница администратора</a>
+                </li>
             </ul>
+        </div>
+        <div sec:authorize="hasAuthority('ROLE_ADMIN')" class="m-2 navbar-text">
+            <a th:href="@{/user}"><strong>[[${#httpServletRequest.remoteUser}]]</strong></a>
+        </div>
+        <div class="m-2 navbar-text" sec:authorize="hasAuthority('ROLE_ADMIN')">
+            <form th:action="@{/logout}" method="post">
+                <input type="submit" class="btn btn-success" value="Sign out">
+                <input type="hidden" name="_csrf" value="{{.csrf_token}}">
+            </form>
         </div>
     </div>
 </nav>
@@ -26,34 +40,72 @@
 <br>
 <div class="container">
     <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
+        <div class="col-md-6 col-md-offset-3 col-sm-6 container justify-content-center card">
             <h1 class="text-center">Создать нового пользователя</h1>
             <div class="card-body">
                 <form th:action="@{/register}" th:object="${user}" method="post">
-                    <input type="hidden" name="_csrf" value="{{.csrf_token}}">
+                       <input type="hidden" name="_csrf" value="{{.csrf_token}}">
                     <div class="form-group">
-                        <label>Имя</label>
-                        <input type="text" name="username" th:field="*{username}" class="form-control"
-                               placeholder="Enter user name"/>
+                        <label class="col-sm-2 col-form-label" for="username"><strong>Имя</strong></label>
+                        <div class="col-sm-10">
+                            <input id="username" class="form-control" th:field="*{username}" placeholder="Введите имя"/>
+                        </div>
+                        <p style="color: red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Name
+                            error</p>
                     </div>
+                    <br>
                     <div class="form-group">
-                        <label>Пароль</label>
-                        <input type="text" name="password" th:field="*{password}" class="form-control"
-                               placeholder="Enter last name"/>
+                        <label class="col-sm-2 col-form-label" for="password"><strong>Пароль</strong></label>
+                        <div class="col-sm-10">
+                            <input id="password" class="form-control" type="password" th:field="*{password}"
+                                   placeholder="Введите пароль"/>
+                            <i class="far fa-eye" id="togglePassword"
+                               style="cursor: pointer; margin-left: -30px; z-index: 100;"></i>
+                        </div>
+                        <p style="color: red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Name
+                            error</p>
                     </div>
+                    <br>
                     <div class="form-group">
-                        <label>Возраст</label>
-                        <input type="number" name="age" th:field="*{age}" class="form-control"
-                               placeholder="Enter user age"/>
+                        <label class="col-sm-4 col-form-label" for="confirm"><strong>Проверочный
+                            пароль</strong></label>
+                        <div class="col-sm-10">
+                            <input id="confirm" class="form-control" type="password" th:field="*{confirm}"
+                                   placeholder="Повторите пароль"/>
+                        </div>
+                        <p style="color: red" th:if="${#fields.hasErrors('confirm')}" th:errors="*{confirm}">Name
+                            error</p>
                     </div>
+                    <br>
                     <div class="form-group">
-                        <label>Почта</label>
-                        <input type="text" name="eMail" th:field="*{eMail}" class="form-control"
-                               placeholder="Enter user eMail"/>
+                        <label class="col-sm-2 col-form-label" for="age"><strong>Возраст</strong></label>
+                        <div class="col-sm-10">
+                            <input id="age" type="number" class="form-control" th:field="*{age}"
+                                   placeholder="Введите возраст"/>
+                        </div>
+                        <p style="color: red" th:if="${#fields.hasErrors('age')}" th:errors="*{age}">Name error</p>
                     </div>
-
-                    <div class="box-footer">
-                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <br>
+                    <div class="form-group">
+                        <label class="col-sm-2 col-form-label" for="eMail"><strong>Почта</strong></label>
+                        <div class="col-sm-10">
+                            <input id="eMail" class="form-control" th:field="*{eMail}"
+                                   placeholder="Введите почту стандарта - some@some.ru"/>
+                        </div>
+                        <p style="color: red" th:if="${#fields.hasErrors('eMail')}" th:errors="*{eMail}">Name error</p>
+                    </div>
+                    <br>
+                    <div class="ui checkbox" sec:authorize="hasAuthority('ROLE_ADMIN')">
+                        <ul>
+                            <li th:each="role_ : ${allRoles}">
+                                <input type="checkbox" th:field="*{roles}" th:value="${role_.getId()}"/>
+                                <label th:text="${role_.getName()}">Role</label>
+                            </li>
+                        </ul>
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success">Сохранить</button>
                     </div>
                 </form>
             </div>
