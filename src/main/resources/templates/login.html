@@ -26,7 +26,7 @@
                     <a class="nav-link active" aria-current="page" href="/admin">Страница администратора</a>
                 </li>
                 <li sec:authorize="hasAuthority('ROLE_ADMIN')" class="nav-item">
-                    <a class="nav-link active" href="/users">Список пользователей</a>
+                    <a class="nav-link active" href="/admin/users">Список пользователей</a>
                 </li>
             </ul>
         </div>
@@ -36,7 +36,7 @@
     </div>
     <div sec:authorize="hasAuthority('ROLE_ADMIN')" class="m-2 navbar-text">
         <form th:action="@{/logout}" method="post">
-            <input type="submit" class="btn btn-success" value="Sign out">
+            <input type="submit" class="btn btn-success" value="Выход здесь!">
             <input type="hidden" name="_csrf" value="{{.csrf_token}}">
         </form>
     </div>
@@ -45,7 +45,7 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
-            <h2 class="text-center">Login page</h2>
+            <h2 class="text-center">Страница входа</h2>
             <form th:action="@{/login}" method="post">
                 <div th:if="${param.error}" class="alert alert-danger" role="alert">
                     [[${session.SPRING_SECURITY_LAST_EXCEPTION.message}]]
@@ -54,18 +54,23 @@
                     <p class="text-warning">Вы вышли из системы</p>
                 </div>
                 <input type="hidden" name="_csrf" value="{{.csrf_token}}">
-                <div class="form-group">
-                    <input class="form-control" type="text" name="username" placeholder="Имя пользователя"/>
+                <div class="form-floating mb-3">
+                    <input class="form-control" id="floatingInput" type="text" name="username"
+                           placeholder="Имя пользователя"/>
+                    <label for="floatingInput">Имя пользователя</label>
                 </div>
                 <br>
-                <div class="form-group">
-                    <input class="form-control" type="password" name="password" placeholder="Пароль"/>
+                <div class="form-floating">
+                    <input class="form-control" type="password" id="floatingPassword" name="password"
+                           placeholder="Пароль"/>
+                    <label for="floatingPassword">Пароль</label>
                 </div>
                 <br>
-                <div>
-                    <span class="mb-4 text text-center"><input type="submit" value="Авторизируйтесь"
-                                                                class="btn btn-primary"></span>
-                    <span> или <a href="/register">Зарегистрируйтесь</a> </span>
+                <div class="col text-center">
+                    <button type="submit" class="btn btn-primary btn-block mb-4">Авторизируйтесь</button>
+                </div>
+                <div class="text-center">
+                    <p>Вы еще не зарегистрированы? <a href="/register">Вперед!</a></p>
                 </div>
                 <br>
             </form>

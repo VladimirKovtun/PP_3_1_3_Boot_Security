@@ -21,7 +21,7 @@
                     <a class="nav-link active" aria-current="page" href="/">Стартовая страница</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/users">Список пользователей</a>
+                    <a class="nav-link" href="/admin/users">Список пользователей</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="/admin">Страница администратора</a>
@@ -33,7 +33,7 @@
         </div>
         <div class="m-2 navbar-text">
             <form th:action="@{/logout}" method="post">
-                <input type="submit" class="btn btn-success" value="Sign out">
+                <input type="submit" class="btn btn-success" value="Выход здесь!">
                 <input type="hidden" name="_csrf" value="{{.csrf_token}}">
             </form>
         </div>
@@ -46,7 +46,7 @@
         <div class="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
             <h1 class="text-center">Обновить информацию о пользователе</h1>
             <div class="card-body">
-                <form th:action="@{/admin/{id} (id=${user.getId()})}" th:object="${user}" th:method="PATCH">
+                <form th:action="@{/admin/edit/{id} (id=${user.getId()})}" th:object="${user}" th:method="PATCH">
                        <input type="hidden" name="_csrf" value="{{.csrf_token}}">
                     <div class="form-group">
                         <label class="control-label" for="username"><strong>Имя</strong></label>

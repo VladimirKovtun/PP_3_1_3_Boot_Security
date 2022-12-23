@@ -15,14 +15,16 @@ import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepositories;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    private RoleRepository roleRepositories;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepositories, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.roleRepositories = roleRepositories;
+        this.passwordEncoder = passwordEncoder;
+    }
 
 
     @Transactional

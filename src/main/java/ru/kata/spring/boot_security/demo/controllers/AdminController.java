@@ -12,7 +12,7 @@ import ru.kata.spring.boot_security.demo.services.UserService;
 import javax.validation.Valid;
 
 @Controller
-@RequestMapping()
+@RequestMapping("/admin")
 public class AdminController {
 
     private final RoleRepository roleRepository;
@@ -24,7 +24,7 @@ public class AdminController {
         this.userService = userService;
     }
 
-    @GetMapping("/admin")
+    @GetMapping()
     public String adminPage() {
         return "admin";
     }
@@ -35,14 +35,14 @@ public class AdminController {
         return "users";
     }
 
-    @GetMapping("/admin/edit/{id}")
+    @GetMapping("/edit/{id}")
     public String editUser(@PathVariable Long id, Model model) {
         model.addAttribute("user", UserDto.toDto(userService.getUser(id)));
         model.addAttribute("allRoles", roleRepository.findAll());
         return "edit_user";
     }
 
-    @PatchMapping("/admin/{id}")
+    @PatchMapping("/edit/{id}")
     public String updateUser(@ModelAttribute("user") @Valid UserDto user, BindingResult bindingResult, Model model) {
         if (user.getRoles().isEmpty() || bindingResult.hasErrors()) {
             model.addAttribute("allRoles", roleRepository.findAll());
@@ -52,12 +52,12 @@ public class AdminController {
             return "edit_user";
         }
         userService.editUser(UserDto.toUser(user));
-        return "redirect:/users";
+        return "redirect:/admin/users";
     }
 
-    @DeleteMapping("/admin/{id}")
+    @DeleteMapping("/delete/{id}")
     public String removeUser(@PathVariable("id") Long id) {
         userService.removeUser(id);
-        return "redirect:/users";
+        return "redirect:/admin/users";
     }
 }

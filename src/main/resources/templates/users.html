@@ -30,7 +30,7 @@
         </div>
         <div class="m-2 navbar-text">
             <form th:action="@{/logout}" method="post">
-                <input type="submit" class="btn btn-success" value="Sign out">
+                <input type="submit" class="btn btn-success" value="Выход здесь!">
                 <input type="hidden" name="_csrf" value="{{.csrf_token}}">
             </form>
         </div>
@@ -66,7 +66,7 @@
                 <td th:text="${user.geteMail()}"/>
                 <td>
                     <a th:href="@{/admin/edit/{id}(id = ${user.getId()})}" class="btn btn-primary">Изменить</a>
-                    <form style="display: inline" th:method="DELETE" th:action="@{/admin/{id}(id = ${user.getId()})}">
+                    <form style="display: inline" th:method="DELETE" th:action="@{/admin/delete/{id}(id = ${user.getId()})}">
                         <input type="hidden" name="_csrf" value="{{.csrf_token}}">
                         <input type="submit" class="btn btn-danger" value="Удалить">
                     </form>

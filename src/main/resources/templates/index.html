@@ -30,7 +30,7 @@
     </div>
     <div sec:authorize="isAuthenticated()" class="m-2 navbar-text">
         <form th:action="@{/logout}" method="post">
-            <input type="submit" class="btn btn-success" value="Sign out">
+            <input type="submit" class="btn btn-success" value="Выход здесь!">
             <input type="hidden" name="_csrf" value="{{.csrf_token}}">
         </form>
     </div>

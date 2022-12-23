@@ -20,7 +20,7 @@
                     <a class="nav-link active" aria-current="page" href="/">Стартовая страница</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="/users">Список пользователей</a>
+                    <a class="nav-link active" href="/admin/users">Список пользователей</a>
                 </li>
             </ul>
         </div>
@@ -30,7 +30,7 @@
     </div>
     <div class="m-2 navbar-text">
         <form th:action="@{/logout}" method="post">
-            <input type="submit" class="btn btn-success" value="Sign out">
+            <input type="submit" class="btn btn-success" value="Выход здесь!">
             <input type="hidden" name="_csrf" value="{{.csrf_token}}">
         </form>
     </div>
