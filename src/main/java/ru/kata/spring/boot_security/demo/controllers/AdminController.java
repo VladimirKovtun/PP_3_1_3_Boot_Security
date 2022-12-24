@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.dto.UserDto;
 import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 import ru.kata.spring.boot_security.demo.services.UserService;
+import ru.kata.spring.boot_security.demo.utils.UserDtoValidator;
 
 import javax.validation.Valid;
 
@@ -15,11 +16,13 @@ import javax.validation.Valid;
 @RequestMapping("/admin")
 public class AdminController {
 
+    private final UserDtoValidator userDtoValidator;
     private final RoleRepository roleRepository;
     private final UserService userService;
 
     @Autowired
-    public AdminController(RoleRepository roleRepository, UserService userService) {
+    public AdminController(UserDtoValidator userDtoValidator, RoleRepository roleRepository, UserService userService) {
+        this.userDtoValidator = userDtoValidator;
         this.roleRepository = roleRepository;
         this.userService = userService;
     }
@@ -44,11 +47,9 @@ public class AdminController {
 
     @PatchMapping("/edit/{id}")
     public String updateUser(@ModelAttribute("user") @Valid UserDto user, BindingResult bindingResult, Model model) {
-        if (user.getRoles().isEmpty() || bindingResult.hasErrors()) {
+        userDtoValidator.validate(user, bindingResult);
+        if (bindingResult.hasErrors()) {
             model.addAttribute("allRoles", roleRepository.findAll());
-            if (user.getRoles().isEmpty()) {
-                bindingResult.rejectValue("roles", "error.roles", "Поле не может быть пустым!");
-            }
             return "edit_user";
         }
         userService.editUser(UserDto.toUser(user));

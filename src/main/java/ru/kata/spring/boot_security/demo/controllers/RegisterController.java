@@ -11,17 +11,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import ru.kata.spring.boot_security.demo.dto.UserDto;
 import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 import ru.kata.spring.boot_security.demo.services.UserService;
+import ru.kata.spring.boot_security.demo.utils.UserDtoValidator;
 
 import javax.validation.Valid;
 
 @Controller
 @RequestMapping
 public class RegisterController {
+    private final UserDtoValidator userDtoValidator;
     private final UserService userService;
     private final RoleRepository roleRepository;
 
     @Autowired
-    public RegisterController(UserService userService, RoleRepository roleRepository) {
+    public RegisterController(UserDtoValidator userDtoValidator, UserService userService, RoleRepository roleRepository) {
+        this.userDtoValidator = userDtoValidator;
         this.userService = userService;
         this.roleRepository = roleRepository;
     }
@@ -34,13 +37,8 @@ public class RegisterController {
 
     @PostMapping("/register")
     public String registerUser(@ModelAttribute("user") @Valid UserDto user, BindingResult bindingResult) {
+        userDtoValidator.validate(user, bindingResult);
         if (bindingResult.hasErrors()) {
-            return "register";
-        } else if (userService.findByName(user.getUsername()).isPresent()) {
-            bindingResult.rejectValue("username", "error.username", "Пользователь с таким именем существует!");
-            return "register";
-        } else if (!user.getPassword().equals(user.getConfirm())) {
-            bindingResult.rejectValue("confirm", "error.confirm", "Пароли не совпадают!");
             return "register";
         }
         userService.addUser(UserDto.toUser(user));

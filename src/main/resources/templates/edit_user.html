@@ -70,12 +70,13 @@
                     </div>
                     <br>
                     <div class="ui checkbox">
-                        <ul>
-                            <li th:each="role_ : ${allRoles}">
-                                <input type="checkbox" th:field="*{roles}" th:value="${role_.getId()}"/>
-                                <label th:for="${#ids.prev('roles')}" th:text="${role_.getName()}">Role</label>
-                            </li>
-                        </ul>
+                        <label class="col-3 col-form-label"><strong>Roles:</strong></label>
+                        <div class="col-9" style="display: inline">
+                            <th:block th:each="role_: ${allRoles}">
+                                <input type="checkbox" th:field="*{roles}"
+                                       th:text="${role_.getName()}" th:value="${role_.getId()}" class="m-2" />
+                            </th:block>
+                        </div>
                         <p style="color: red" th:if="${#fields.hasErrors('roles')}" th:errors="*{roles}">Name error</p>
                     </div>
                     <br>
@@ -87,5 +88,7 @@
         </div>
     </div>
 </div>
+<br>
+<br>
 </body>
 </html>
